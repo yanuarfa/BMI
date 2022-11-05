@@ -4,15 +4,14 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.*
+import kotlin.math.ceil
 
 class HomeActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var beratBadan: EditText
     private lateinit var tinggiBadan: EditText
     private lateinit var btnHitung: Button
     private lateinit var tvHasil: TextView
-
-    var spinJenisKelamin = ""
-//    var hasilBMI = ""
+    private lateinit var spinJenisKelamin: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,7 +20,6 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
         btnHitung = findViewById(R.id.btnHitung)
         tvHasil = findViewById(R.id.tvHasil)
 
-        val jeniskelamin = resources.getStringArray(R.array.jenis_kelamin)
         val spinner = findViewById<Spinner>(R.id.jeniskelamin)
 
         ArrayAdapter.createFromResource(this, R.array.jenis_kelamin, android.R.layout.simple_spinner_item).also {
@@ -45,22 +43,38 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
     override fun onClick(p0: View?) {
         beratBadan = findViewById(R.id.beratBadan)
         tinggiBadan = findViewById(R.id.tinggiBadan)
+
         if(p0?.id == R.id.btnHitung) {
-            if(beratBadan.text.toString() === "") {
-                tvHasil.text = spinJenisKelamin
+            if(beratBadan.text.toString() == "" || tinggiBadan.text.toString() == "") {
+                Toast.makeText(applicationContext, "Form wajib diisi!",Toast.LENGTH_LONG).show()
+            } else {
+                val inputBeratBadan = beratBadan.text.toString().toFloat()
+                val inputTinggiBadan = tinggiBadan.text.toString().toFloat()
+                val tinggiMeter = inputTinggiBadan / 100
+                val bmi = inputBeratBadan / (tinggiMeter * tinggiMeter)
+
+                if(spinJenisKelamin == "Laki-laki") {
+                    if (bmi < 17) {
+                        tvHasil.text = "Kurus"
+                    } else if (bmi in 17.0..23.0) {
+                        tvHasil.text = "Normal"
+                    } else if (bmi in 23.0..27.0) {
+                        tvHasil.text = "Kegemukan"
+                    } else {
+                        tvHasil.text = "Obesitas"
+                    }
+                } else {
+                    if (bmi < 18) {
+                        tvHasil.text = "Kurus"
+                    } else if (bmi in 18.0..25.0) {
+                        tvHasil.text = "Normal"
+                    } else if (bmi in 25.0..27.0) {
+                        tvHasil.text = "Kegemukan"
+                    } else {
+                        tvHasil.text = "Obesitas"
+                    }
+                }
             }
         }
-//        if(beratBadan.getText().toString().trim() === "") {
-//            Toast.makeText(applicationContext, "Form wajib diisi!",Toast.LENGTH_LONG).show()
-//        } else {
-//            if(p0?.id == R.id.btnHitung) {
-//                val inputBeratBadan = beratBadan.text.toString().trim()
-//                val inputTinggiBadan = tinggiBadan.text.toString().trim()
-//                val tinggiMeter = inputTinggiBadan.toDouble() / 100
-//
-//                val bmi = inputBeratBadan.toDouble() / (tinggiMeter.toDouble() * tinggiMeter.toDouble())
-//                tvHasil.text = spinJenisKelamin
-//            }
-//        }
     }
 }
