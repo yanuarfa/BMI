@@ -16,6 +16,7 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
+        supportActionBar?.hide()
 
         btnHitung = findViewById(R.id.btnHitung)
         tvHasil = findViewById(R.id.tvHasil)
